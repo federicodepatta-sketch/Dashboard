@@ -1,3 +1,34 @@
+# Just Russel — ad-account AI database & Swing Monitor
+
+This repo holds two things:
+
+1. **Ad-account AI database** (`db/`, `pipeline/`, `docs/schema/`, `sql/`) — the
+   foundation layer of the account brain from the build-it-yourself plan. A
+   clean Supabase/Postgres schema centered on the ad **creative**, populated by
+   a **daily Meta Graph API pull**, that Claude answers questions against by
+   **writing real SQL** instead of parsing exports. Start at
+   [`docs/schema/README.md`](docs/schema/README.md); `CLAUDE.md` tells the
+   querying agent how to use it.
+2. **Swing Monitor** (below) — the existing day-over-day ad swing dashboard.
+
+## Ad-account database — quick start
+
+```bash
+# 1. apply the schema to your Supabase project (see db/README.md)
+psql "$DATABASE_URL" -f db/migrations/0001_core_schema.sql
+psql "$DATABASE_URL" -f db/migrations/0002_views.sql
+
+# 2. configure secrets, then run the daily pull (see pipeline/README.md)
+cp .env.example .env    # fill in Meta + Supabase creds
+npm install
+npm run pull            # backfill: node pipeline/meta-daily-pull.mjs --since ... --until ...
+```
+
+On Vercel the pull runs every morning via `vercel.json`'s cron
+(`0 6 * * *` → `api/cron/daily-meta-pull.js`).
+
+---
+
 # Swing Monitor · Just Russel
 
 Ad-level, day-over-day **swing monitor** for Just Russel's Meta ads. It ranks

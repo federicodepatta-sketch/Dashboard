@@ -32,10 +32,17 @@ then narrow with `WHERE` clauses and analyze the small result set.
 
 ```
 db/migrations/   Postgres DDL (apply in order) — see db/README.md
+                 0004 = the repeat-query analyses as SQL functions
 pipeline/        daily Meta → Supabase pull    — see pipeline/README.md
 docs/schema/     table-by-table docs + querying guide  ← read these first
 sql/examples/    worked SQL for Q1/Q2/Q3
-src/, api/       Swing Monitor dashboard
+api/             serverless functions: analysis.js (RPC dispatch), cron/, meta-swing.js
+src/             Ad Intelligence dashboard (Intelligence.jsx) + Swing Monitor (App.jsx)
 ```
+
+The **Ad Intelligence** dashboard reads `db/migrations/0004`'s functions via
+`POST /api/analysis`. If you add a new repeat-query analysis, add it as a SQL
+function there and a case in `api/analysis.js` so the dashboard and SQL stay in
+lockstep.
 
 Secrets go in `.env` (see `.env.example`) — never commit them.

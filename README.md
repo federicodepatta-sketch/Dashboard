@@ -17,6 +17,8 @@ This repo holds two things:
 # 1. apply the schema to your Supabase project (see db/README.md)
 psql "$DATABASE_URL" -f db/migrations/0001_core_schema.sql
 psql "$DATABASE_URL" -f db/migrations/0002_views.sql
+psql "$DATABASE_URL" -f db/migrations/0003_functions.sql
+psql "$DATABASE_URL" -f db/migrations/0004_analysis_functions.sql
 
 # 2. configure secrets, then run the daily pull (see pipeline/README.md)
 cp .env.example .env    # fill in Meta + Supabase creds
@@ -26,6 +28,18 @@ npm run pull            # backfill: node pipeline/meta-daily-pull.mjs --since ..
 
 On Vercel the pull runs every morning via `vercel.json`'s cron
 (`0 6 * * *` → `api/cron/daily-meta-pull.js`).
+
+### Ad Intelligence dashboard
+
+The **Ad Intelligence** tab (the default view; Swing Monitor is the second tab)
+is the visual half of the unlock — repeat queries you don't want to re-type. It
+reads the analyses in `db/migrations/0004` through `POST /api/analysis` (which
+runs them server-side against Supabase, keeping the service-role key off the
+client) and renders four panels: the funnel-leak diagnosis, creator ROAS,
+Meta-quality-vs-ROAS verdict, and top creatives with viewable links. With
+Supabase unset it falls back to bundled demo data so the UI always renders.
+Each panel is exactly one SQL function, so the dashboard and an ad-hoc question
+to Claude return the same numbers.
 
 ---
 

@@ -28,5 +28,6 @@ Migrations are idempotent where practical (`create table if not exists`,
 | `0001_core_schema.sql` | enums, `attribution_models`, dimensions (`accounts`, `campaigns`, `ad_sets`, `creatives`, `ads`), fact tables (`ad_insights_daily`, `ad_conversions_daily`), indexes |
 | `0002_views.sql` | `v_ad_daily`, `v_ad_roas`, `v_creative_funnel` — ratios derived here, never stored |
 | `0003_functions.sql` | `refresh_ad_lifecycle()` — recomputes ad first/last active dates from the facts |
+| `0004_analysis_functions.sql` | the repeat-query analyses (`analysis_funnel`, `analysis_creators`, `analysis_meta_quality`, `analysis_meta_quality_tiers`, `analysis_overview`, `analysis_top_creatives`) that back the dashboard and RPC |
 
 See `docs/schema/` for how each table is meant to be used.
